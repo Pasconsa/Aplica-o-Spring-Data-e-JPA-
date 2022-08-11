@@ -1,12 +1,15 @@
 package projeto.spring.data.aula;
 
+import java.util.Optional;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import projeto.spring.data.aula.dao.InterfaceStringDataUser;
+import projeto.spring.data.aula.dao.InterfaceSpringDataUser;
+import projeto.spring.data.aula.model.UsuarioSpringData;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:META-INF/spring-config.xml" })
@@ -14,13 +17,57 @@ import projeto.spring.data.aula.dao.InterfaceStringDataUser;
 public class AppSpringDataTest {
 
 	@Autowired
-	private InterfaceStringDataUser interfaceStringDataUser;
+	private InterfaceSpringDataUser interfaceStringDataUser;
 	
-	@Test
+	@Test //Cadastrando Banco de dados
 	public void testeInsert() {
-		System.out.println("Spring testado");
 		
-	
-	}
+		UsuarioSpringData usuarioSpringData = new UsuarioSpringData();
 
+		usuarioSpringData.setEmail("Larissa@hotmail.com");
+		usuarioSpringData.setIdade(3);
+		usuarioSpringData.setLogin("teste 123");
+		usuarioSpringData.setSenha("123");
+		usuarioSpringData.setNome("Lala");
+
+		interfaceStringDataUser.save(usuarioSpringData); //pode fazer varias ações como deletetar , pesquisar
+		
+		System.out.println("Usuario cadastrado -> " + interfaceStringDataUser.count());
+
+	}
+	
+	@Test	//Consulta Banco de dados
+	public void testeConsulta() {
+
+		Optional<UsuarioSpringData> usuarioSpringData = interfaceStringDataUser.findById(2L); //find retorna um objeto optional
+		System.out.println(usuarioSpringData.get().getEmail());
+		System.out.println(usuarioSpringData.get().getIdade());
+		System.out.println(usuarioSpringData.get().getLogin());
+		System.out.println(usuarioSpringData.get().getNome());
+		System.out.println(usuarioSpringData.get().getSenha());
+		System.out.println(usuarioSpringData.get().getId());
+		
+	}
+	
+	@Test //atualizar
+	public void testeUpdate() {
+
+		Optional<UsuarioSpringData> usuarioSpringData = interfaceStringDataUser.findById(3L);
+
+		UsuarioSpringData data = usuarioSpringData.get();
+
+		data.setNome("Alex  Update Spring Data");
+		data.setIdade(25);
+
+		interfaceStringDataUser.save(data);
+	}
+	
+	@Test //Deletar objeto consultado
+	public void testeDelete() {
+		Optional<UsuarioSpringData> usuarioSpringData = interfaceStringDataUser.findById(6L);
+
+		interfaceStringDataUser.delete(usuarioSpringData.get());
+	}
 }
+
+
