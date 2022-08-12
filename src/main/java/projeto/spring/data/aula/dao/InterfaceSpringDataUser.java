@@ -2,6 +2,9 @@ package projeto.spring.data.aula.dao;
 
 import java.util.List;
 
+import javax.persistence.LockModeType;
+
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -14,10 +17,13 @@ import projeto.spring.data.aula.model.UsuarioSpringData;
 @Repository
 public interface InterfaceSpringDataUser extends CrudRepository<UsuarioSpringData, Long>{
 	
+	@Transactional(readOnly = true)
 	@Query(value = "select p from UsuarioSpringData p where p.nome like %?1%")
 	public List<UsuarioSpringData> buscaPorNomeAsync (String nome);
 	
 	//Consultando Query por parametro
+	@Lock(LockModeType.READ)   // bloqueio de leitura exp atualizar e pesquisar ao mesmo tempo usuarios diferentes
+	@Transactional(readOnly = true)
 	@Query(value = "select p from UsuarioSpringData p where p.nome = :paramnome")  //Colocar o JPQL , no caso aqui retorna um objeto
 	public UsuarioSpringData buscaPorNomeParam (@Param("paramnome") String paramnome);
 

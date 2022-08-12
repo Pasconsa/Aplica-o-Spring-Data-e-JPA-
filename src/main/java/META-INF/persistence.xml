@@ -4,6 +4,7 @@
         version="2.2">
 	<persistence-unit name="projeto-spring-data-aula">
 	<class>projeto.spring.data.aula.model.UsuarioSpringData</class>
+	<class>projeto.spring.data.aula.model.Telefone</class>
 		
 	</persistence-unit>
 	
